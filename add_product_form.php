@@ -3,7 +3,20 @@
 
 $id = $_GET['id'] ?? '';
 require('database.php');
-require_once('index.php');
+
+
+function getAllCategories()
+{
+    $db = db_connect();
+    $sql = "SELECT * FROM categories ";
+    $result = mysqli_query($db, $sql);
+    $categories = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $categories[] = $row;
+    }
+    return $categories;
+    //mysql_free_result ($result);
+}
 
 
 $categories = getAllCategories();
@@ -13,27 +26,30 @@ $categories = getAllCategories();
 <html>
 
 <!-- the head section -->
+
 <head>
     <title>My Guitar Shop</title>
     <link rel="stylesheet" type="text/css" href="main.css">
 </head>
 
 <!-- the body section -->
+
 <body>
-    <header><h1>Product Manager</h1></header>
+    <header>
+        <h1>Product Manager</h1>
+    </header>
 
     <main>
         <h1>Add Product</h1>
-        <form action="add_product.php" method="post"
-              id="add_product_form">
+        <form action="add_product.php" method="post" id="add_product_form">
 
             <label>Category:</label>
             <select name="category_id">
-            <?php foreach ($categories as $category) : ?>
-                <option value="<?php echo $category['categoryID']; ?>">
-                    <?php echo $category['categoryName']; ?>
-                </option>
-            <?php endforeach; ?>
+                <?php foreach ($categories as $category) : ?>
+                    <option value="<?php echo $category['categoryID']; ?>">
+                        <?php echo $category['categoryName']; ?>
+                    </option>
+                <?php endforeach; ?>
             </select><br>
 
             <label>Code:</label>
@@ -55,4 +71,5 @@ $categories = getAllCategories();
         <p>&copy; <?php echo date("Y"); ?> My Guitar Shop, Inc.</p>
     </footer>
 </body>
+
 </html>
